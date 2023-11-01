@@ -2,4 +2,6 @@ from rest_framework import serializers
 
 
 class FileUploadSerializer(serializers.Serializer):
-    file = serializers.FileField()
+    customers = serializers.FileField()
+    products = serializers.FileField()
+    orders = serializers.FileField()

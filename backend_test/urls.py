@@ -20,8 +20,6 @@ from reportes.views import UploadFileView, DownloadFileView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('customers/', UploadFileView.as_view(file_type='customers'), name='customers'),
-    path('products/', UploadFileView.as_view(file_type='products'), name='products'),
-    path('orders/', UploadFileView.as_view(file_type='orders'), name='orders'),
+    path('data/', UploadFileView.as_view(), name='data'),
     path('reports/<int:report>/', DownloadFileView.as_view(), name='reports'),
 ]

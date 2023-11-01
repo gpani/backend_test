@@ -32,48 +32,46 @@ def get_product_count(products):
 
 class UploadFileView(generics.CreateAPIView):
     serializer_class = FileUploadSerializer
-    file_type = None  # debe ser customers, products, orders
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        file = serializer.validated_data['file']
-        reader = pd.read_csv(file)
-        match self.file_type:
-            case 'customers':
-                for _, row in reader.iterrows():
-                    new_customer = Customer(
-                        id=row['id'],
-                        first_name=row['firstname'],
-                        last_name=row['lastname'],
-                    )
-                    new_customer.save()
-                return Response({"status": "success"},
-                                status.HTTP_201_CREATED)
-            case 'products':
-                for _, row in reader.iterrows():
-                    new_product = Product(
-                        id=row['id'],
-                        name=row['name'],
-                        cost=row['cost'],
-                    )
-                    new_product.save()
-                return Response({"status": "success"},
-                                status.HTTP_201_CREATED)
-            case 'orders':
-                for _, row in reader.iterrows():
-                    new_order = Order(
-                        id=row['id'],
-                        customer=Customer.objects.get(pk=row['customer']),
-                    )
-                    new_order.save()
-                    for product_id, count in get_product_count(row['products']).items():
-                        product = Product.objects.get(pk=product_id)
-                        OrderProduct(order=new_order, product=product, count=count).save()
-                return Response({"status": "success"},
-                                status.HTTP_201_CREATED)
-        return Response({"status": "fail"},
-                        status.HTTP_400_BAD_REQUEST)
+        customers_reader = pd.read_csv(serializer.validated_data['customers'])
+        products_reader = pd.read_csv(serializer.validated_data['products'])
+        orders_reader = pd.read_csv(serializer.validated_data['orders'])
+
+        Customer.objects.all().delete()
+        Product.objects.all().delete()
+        Order.objects.all().delete()
+        OrderProduct.objects.all().delete()
+
+        for _, row in customers_reader.iterrows():
+            new_customer = Customer(
+                id=row['id'],
+                first_name=row['firstname'],
+                last_name=row['lastname'],
+            )
+            new_customer.save()
+
+        for _, row in products_reader.iterrows():
+            new_product = Product(
+                id=row['id'],
+                name=row['name'],
+                cost=row['cost'],
+            )
+            new_product.save()
+
+        for _, row in orders_reader.iterrows():
+            new_order = Order(
+                id=row['id'],
+                customer=Customer.objects.get(pk=row['customer']),
+            )
+            new_order.save()
+            for product_id, count in get_product_count(row['products']).items():
+                product = Product.objects.get(pk=product_id)
+                OrderProduct(order=new_order, product=product, count=count).save()
+        return Response({"status": "success"},
+                        status.HTTP_201_CREATED)
 
 
 class DownloadFileView(generics.RetrieveAPIView):
