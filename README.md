@@ -73,3 +73,5 @@ El otro gran desafío fue generar las consultas para los distintos reportes. Si 
 Escribí tests básicos para la API que verifica errores al no subir todos los archivos CSV requeridos y ejecuta una pequeña prueba funcional para verificar los cálculos realizados por las queries. Me basé en [esta pregunta en StackOverflow](https://stackoverflow.com/questions/24201676/how-can-i-test-binary-file-uploading-with-django-rest-frameworks-test-client) y en [esta otra](https://stackoverflow.com/questions/55708696/testing-django-fileresponse). Para verificar dichos cálculos los almacené en un `DataFrame`. Me basé en [la documentación de pandas](https://pandas.pydata.org/docs/reference/api/pandas.testing.assert_series_equal.html).
 
 Finalmente implementé el _containerizado_ de la app. Tomando como referencia [este post](https://medium.com/backticks-tildes/how-to-dockerize-a-django-application-a42df0cb0a99) no me resultó difícil usando Docker y `docker-compose`.
+
+Postdata: Hay un pequeño archivo `index.html` que hace las veces de frontend muy básico. Permite subir los archivos y descargar los reportes.

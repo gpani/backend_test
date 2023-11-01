@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Formulario para subir archivos</title>
+</head>
+<body>
+
+<form action="http://localhost:8000/data/" method="post" enctype="multipart/form-data">
+    <label for="customers">Archivo customers:</label>
+    <input type="file" id="customers" name="customers" accept=".csv"><br><br>
+
+    <label for="products">Archivo products:</label>
+    <input type="file" id="products" name="products" accept=".csv"><br><br>
+
+    <label for="orders">Archivo orders:</label>
+    <input type="file" id="orders" name="orders" accept=".csv"><br><br>
+
+    <input type="submit" value="Subir Archivos">
+</form>
+
+
+<ul>
+  <li><a href="http://localhost:8000/reports/1/">Descargar Reporte 1</a></li>
+  <li><a href="http://localhost:8000/reports/2/">Descargar Reporte 2</a></li>
+  <li><a href="http://localhost:8000/reports/3/">Descargar Reporte 3</a></li>
+</ul>
+
+</body>
+</html>
