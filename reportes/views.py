@@ -82,7 +82,7 @@ class DownloadFileView(generics.RetrieveAPIView):
                 df = pd.DataFrame(list(
                     OrderProduct.objects.annotate(
                         cost=F("product__cost") * F("count")).values("order").order_by(
-                        "order").annotate(total_cost=Sum("cost"))))
+                        "order").annotate(total=Sum("cost"))))
                 df.rename(columns={'order': 'id'}, inplace=True)
                 file_name = "order_prices.csv"
             case 2:
@@ -95,7 +95,18 @@ class DownloadFileView(generics.RetrieveAPIView):
                     lambda x: OrderedDict.fromkeys(x).keys()).str.join(" "))
                 file_name = "product_customers.csv"
             case 3:
-                pass
+                df = pd.DataFrame(list(
+                    OrderProduct.objects.annotate(
+                        order_cost=F("product__cost") * F("count")).values(
+                        "order__customer", "order__customer__first_name", "order__customer__last_name").annotate(
+                        total=Sum("order_cost")).order_by('-total')
+                ))
+                df.rename(columns={
+                    'order__customer': 'id',
+                    'order__customer__first_name': 'firstname',
+                    'order__customer__last_name': 'lastname',
+                }, inplace=True)
+                file_name = "order_prices.csv"
             case _:
                 return Response({"status": "fail"},
                                 status.HTTP_400_BAD_REQUEST)
