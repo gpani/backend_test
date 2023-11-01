@@ -106,7 +106,7 @@ class DownloadFileView(generics.RetrieveAPIView):
                     'order__customer__first_name': 'firstname',
                     'order__customer__last_name': 'lastname',
                 }, inplace=True)
-                file_name = "order_prices.csv"
+                file_name = "customer_ranking.csv"
             case _:
                 return Response({"status": "fail"},
                                 status.HTTP_400_BAD_REQUEST)
